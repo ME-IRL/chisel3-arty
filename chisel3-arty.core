@@ -1,0 +1,35 @@
+CAPI=2:
+name: meirlabs::chisel3-arty:0.1
+description: Chisel3 Modules for Arty FPGA Board
+
+filesets:
+  rtl:
+    depend: ["fusesoc:utils:generators:0.1.6"]
+
+  constr:
+    files: [constr/Chisel3-Arty.xdc : {file_type: xdc}]
+
+generate:
+  verilog:
+    generator: chisel
+    parameters:
+      buildtool: sbt
+      outputdir: generated_verilog
+      copy_core: true
+      output:
+        files: [generated_verilog/ArtyTop.v : {file_type: verilogSource}]
+
+targets:
+  default:
+    default_tool: vivado
+    filesets: [rtl, constr]
+    generate: [verilog]
+    toplevel: ArtyTop
+    tools:
+      vivado:
+        part: xc7a100tcsg324-1
+      symbiflow:
+        part: xc7a100t
+        pnr: vtr
+        package: csg324-1
+        vendor: xilinx
