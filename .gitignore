@@ -341,3 +341,5 @@ hs_err_pid*
 
 build/
 generated_verilog/
+xsim.dir/
+xvlog.pb

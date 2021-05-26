@@ -9,6 +9,13 @@ filesets:
   constr:
     files: [constr/Chisel3-Arty.xdc : {file_type: xdc}]
 
+  gba-constr:
+    files: [constr/GBA-Arty.xdc : {file_type: xdc}]
+
+  rom:
+    files:
+      - rom/fire.mem
+
 generate:
   verilog:
     generator: chisel
@@ -19,12 +26,35 @@ generate:
       output:
         files: [generated_verilog/ArtyTop.v : {file_type: verilogSource}]
 
+  gba-verilog:
+    generator: chisel
+    parameters:
+      buildtool: sbt
+      outputdir: generated_verilog
+      copy_core: true
+      output:
+        files: [generated_verilog/GBATop.v : {file_type: verilogSource}]
+
 targets:
   default:
     default_tool: vivado
     filesets: [rtl, constr]
     generate: [verilog]
     toplevel: ArtyTop
+    tools:
+      vivado:
+        part: xc7a100tcsg324-1
+      symbiflow:
+        part: xc7a100t
+        pnr: vtr
+        package: csg324-1
+        vendor: xilinx
+
+  gba:
+    default_tool: vivado
+    filesets: [rtl, gba-constr, rom]
+    generate: [gba-verilog]
+    toplevel: GBATop
     tools:
       vivado:
         part: xc7a100tcsg324-1
